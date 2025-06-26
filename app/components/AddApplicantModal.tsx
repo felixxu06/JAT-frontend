@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, Typography, MenuItem } from "@mui/material";
 import RequiredStar from "./RequiredStar";
-import { useApplicants, type Job } from "~/hooks/ApplicantsContext";
+import { useApplicants, type Job } from "../hooks/ApplicantsContext";
 
 export interface AddApplicantModalProps {
   open: boolean;
