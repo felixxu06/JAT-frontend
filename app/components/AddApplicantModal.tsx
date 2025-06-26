@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, Typography, MenuItem } from "@mui/material";
 import RequiredStar from "./RequiredStar";
-import { useApplicants, type Job } from "../hooks/ApplicantsContext";
+import { applicantStatusMap, useApplicants, type Job } from "../hooks/ApplicantsContext";
 
 export interface AddApplicantModalProps {
   open: boolean;
@@ -9,15 +9,12 @@ export interface AddApplicantModalProps {
   onAdd: (form: {
     firstName: string;
     lastName: string;
-    status: string;
     email: string;
     jobId: number;
     description: string;
-    appliedDate: string;
-    linkedInProfile: string;
     address: string;
     phoneNumber: string;
-    id?: string;
+    id?: number;
   }) => void;
   applicant?: any | null;
 }
@@ -35,7 +32,7 @@ const initialForm = {
 export default function AddApplicantModal({ open, onClose, onAdd, applicant }: AddApplicantModalProps) {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
-  const {jobOptions} = useApplicants()
+  const { jobOptions } = useApplicants()
   useEffect(() => {
     if (applicant) {
       setForm({ ...initialForm, ...applicant });
@@ -45,7 +42,11 @@ export default function AddApplicantModal({ open, onClose, onAdd, applicant }: A
   }, [applicant, open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    let value: number | string = e.target.value;
+    if (e.target.name === "status") {
+      value = parseInt(e.target.value);
+    }
+    setForm({ ...form, [e.target.name]: value });
     setErrors({ ...errors, [e.target.name]: false });
   };
 
@@ -104,7 +105,7 @@ export default function AddApplicantModal({ open, onClose, onAdd, applicant }: A
             error={!!errors.jobId}
             helperText={errors.jobId ? 'Required' : ''}
           >
-            {jobOptions.map((option:Job) => (
+            {jobOptions.map((option: Job) => (
               <MenuItem key={option.id} value={option.id}>{option.companyName}-{option.position}</MenuItem>
             ))}
           </TextField>
@@ -121,6 +122,27 @@ export default function AddApplicantModal({ open, onClose, onAdd, applicant }: A
           <Typography minWidth={160} component="span" noWrap>Description</Typography>
           <TextField name="description" value={form.description} onChange={handleChange} fullWidth size="small" multiline minRows={3} />
         </Box>
+        {/* Status dropdown for edit mode */}
+        {isEditMode && (
+          <Box display="flex" alignItems="center" gap={2} mb={1}>
+            <Typography minWidth={160} component="span" noWrap>Status<RequiredStar /></Typography>
+            <TextField
+              select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              fullWidth
+              size="small"
+              required
+              error={!!errors.status}
+              helperText={errors.status ? 'Required' : ''}
+            >
+              {Object.entries(applicantStatusMap).map(([num, label]) => (
+                <MenuItem key={num} value={num}>{label}</MenuItem>
+              ))}
+            </TextField>
+          </Box>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>

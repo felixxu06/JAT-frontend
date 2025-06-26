@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MainLayout from "../components/MainLayout";
-import { ApplicantsProvider, applicantStatusMap, useApplicants } from "../hooks/ApplicantsContext";
+import { ApplicantsProvider, applicantStatusMap, useApplicants, type Applicant } from "../hooks/ApplicantsContext";
 import {
   Table,
   TableBody,
@@ -16,7 +16,6 @@ import {
   Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddApplicantModal from "../components/AddApplicantModal";
 
 function ApplicantsTable() {
@@ -109,7 +108,7 @@ function ApplicantsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {applicants.map((applicant) => (
+            {applicants.map((applicant:Applicant) => (
               <TableRow key={applicant.id}>
                 <TableCell>{applicant.firstName}</TableCell>
                 <TableCell>{applicant.lastName}</TableCell>
@@ -121,9 +120,6 @@ function ApplicantsTable() {
                 <TableCell>
                   <IconButton color="primary" size="small" onClick={() => handleEdit(applicant)}>
                     <EditIcon />
-                  </IconButton>
-                  <IconButton color="error" size="small">
-                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>

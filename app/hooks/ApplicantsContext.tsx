@@ -2,19 +2,19 @@ import React, { createContext, useContext, useState, useEffect, type PropsWithCh
 import { api } from "./api";
 
 export interface Job {
-  id: string;
+  id: number;
   companyName: string;
   position: string;
   status?: string;
 }
 
 export interface Applicant {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
-  status: string;
+  status: number;
   email: string;
-  job: string;
+  jobId: string;
   description: string;
   appliedDate: string;
 }
